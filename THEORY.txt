@@ -1,1 +1,0 @@
-Database - A database is a collection of related data
