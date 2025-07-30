@@ -1,5 +1,5 @@
 
-# Oracle SQL Quick Reference
+# Oracle SQL Quick Reference (Extended)
 
 ## Database & Tables
 
@@ -16,24 +16,24 @@
   ```
 
 - **Check Current User**
-    ```sql  
-    SHOW USER;
-    ```
+  ```sql  
+  SHOW USER;
+  ```
 
 - **List All Tables (Current User)**
-    ```sql
-    SELECT table_name FROM user_tables;
-    ```
+  ```sql
+  SELECT table_name FROM user_tables;
+  ```
 
 - **List All Tables (All Users)**
-    ```sql
-    SELECT owner, table_name FROM all_tables;
-    ```
+  ```sql
+  SELECT owner, table_name FROM all_tables;
+  ```
 
 - **Show All Users**
-    ```sql
-    SELECT username FROM all_users;
-    ```
+  ```sql
+  SELECT username FROM all_users;
+  ```
 
 ---
 
@@ -283,10 +283,116 @@ GRANT CONNECT, RESOURCE TO testuser;
 
 ### Grant All Privileges
 ```sql
-GRANT ALL PRIVILEGES to testuser;
+GRANT ALL PRIVILEGES TO testuser;
 ```
 
 ### Revoke Privileges
 ```sql
 REVOKE CONNECT FROM testuser;
+```
+
+---
+
+## Additional SQL Features
+
+### Alias
+```sql
+SELECT name AS customer_name, salary AS monthly_salary FROM CUSTOMERS;
+```
+
+### DISTINCT
+```sql
+SELECT DISTINCT age FROM CUSTOMERS;
+```
+
+### CASE Statement
+```sql
+SELECT name,
+       CASE 
+         WHEN salary > 100000 THEN 'High'
+         WHEN salary BETWEEN 50000 AND 100000 THEN 'Medium'
+         ELSE 'Low'
+       END AS salary_band
+FROM CUSTOMERS;
+```
+
+### IS NULL / IS NOT NULL
+```sql
+SELECT * FROM CUSTOMERS WHERE address IS NULL;
+```
+```sql
+SELECT * FROM CUSTOMERS WHERE address IS NOT NULL;
+```
+
+### EXISTS
+```sql
+SELECT * FROM CUSTOMERS C
+WHERE EXISTS (
+  SELECT 1 FROM ORDERS O WHERE O.customer_id = C.id
+);
+```
+
+### UNION / UNION ALL
+```sql
+SELECT name FROM CUSTOMERS
+UNION
+SELECT name FROM EMPLOYEES;
+```
+```sql
+SELECT name FROM CUSTOMERS
+UNION ALL
+SELECT name FROM EMPLOYEES;
+```
+
+### ROWNUM
+```sql
+SELECT * FROM CUSTOMERS WHERE ROWNUM <= 5;
+```
+
+### FETCH FIRST N ROWS (Oracle 12c+)
+```sql
+SELECT * FROM CUSTOMERS FETCH FIRST 5 ROWS ONLY;
+```
+
+---
+
+## Transactions
+
+### Commit
+```sql
+COMMIT;
+```
+
+### Rollback
+```sql
+ROLLBACK;
+```
+
+---
+
+## Indexes
+
+### Create Index
+```sql
+CREATE INDEX idx_name ON CUSTOMERS(name);
+```
+
+### Drop Index
+```sql
+DROP INDEX idx_name;
+```
+
+---
+
+## Sequences
+
+### Create Sequence
+```sql
+CREATE SEQUENCE cust_seq START WITH 1 INCREMENT BY 1;
+```
+
+### Use Sequence in Insert
+```sql
+INSERT INTO CUSTOMERS(id, name, age, address, salary) 
+VALUES (cust_seq.NEXTVAL, 'Aman', 26, 'Delhi', 90000);
 ```
